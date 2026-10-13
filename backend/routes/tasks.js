@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const Task = require("../models/Task");
+const authMiddleware = require("../middleware/auth");
+const { taskValidation } = require("../middleware/validation");
 
 // GET /tasks
-router.get("/", async (req, res, next) => {
+router.get("/", authMiddleware, async (req, res, next) => {
     try {
         const tasks = await Task.find();
 
@@ -16,7 +18,7 @@ router.get("/", async (req, res, next) => {
 
 
 // POST /tasks
-router.post("/", async (req, res, next) => {
+router.post("/", authMiddleware, taskValidation, async (req, res, next) => {
     try {
         const task = await Task.create(req.body);
 
@@ -28,7 +30,7 @@ router.post("/", async (req, res, next) => {
 
 
 // PUT /tasks/:id
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", authMiddleware, taskValidation, async (req, res, next) => {
     try {
         const task = await Task.findByIdAndUpdate( //Find the task by id and update it using the data sent in the request body.
             req.params.id,
@@ -54,7 +56,7 @@ router.put("/:id", async (req, res, next) => {
 
 
 // DELETE /tasks/:id
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", authMiddleware, async (req, res, next) => {
     try {
         const task = await Task.findByIdAndDelete(req.params.id);
 

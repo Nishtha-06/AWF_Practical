@@ -1,0 +1,612 @@
+AWDF PROJECT CONTEXT
+=====================
+
+This document is based on the repository contents inspected on 2026-09-23. The
+workspace root is `e:\sem 5\AWDF`. Generated folders and dependency contents
+were not used as source evidence. The repository has five historical commits
+named PR1 through PR5, plus current uncommitted changes in
+`backend/server.js` and `pr1/src/pages/Projects.jsx`.
+
+PROJECT STRUCTURE
+-----------------
+
+The project contains:
+
+- `context.txt` - this technical context document.
+- `package.json` and `package-lock.json` - top-level package metadata. The
+	top-level package declares only `react-icons` and has no scripts.
+- `backend/` - the Node.js/CommonJS Express and Mongoose backend.
+- `pr1/` - the React 19 + Vite frontend. The folder name is `pr1`, although it
+	now contains the frontend work from PR1 through the current Practical 6
+	integration attempt.
+- `node_modules/` folders - dependency installations; intentionally excluded
+	from this context.
+- `pr1/dist/` is generated build output when present and is not source evidence.
+- `.git/` - repository metadata; intentionally excluded.
+
+There is no separate practical documentation or handout in the repository
+other than `pr1/README.md`. That README is the standard Vite starter README
+and does not describe Practicals 1-6.
+
+PRACTICAL HISTORY
+=================
+
+The practical mapping below is supported by the commit history:
+
+- `d781941` - commit message `PR1`
+- `7772183` - commit message `PR2`
+- `cf18810` - commit message `PR3`
+- `7a05b1a` - commit message `PR4`
+- `30d8960` - commit message `PR5`
+
+The repository does not contain files explicitly labelled Practical 1,
+Practical 2, etc. The mapping is therefore based on these commit names and
+the files changed in each commit. Practical 6 is represented by the current
+working-tree integration code and the intended requirements supplied in the
+task description.
+
+PRACTICAL 1
+-----------
+
+Objective/functionality:
+
+- Establish basic reusable React functional components and prop passing for a
+	student portfolio interface.
+- The historical PR1 commit added `About`, `Footer`, `Header`, and `Skills`.
+
+Important files:
+
+- `pr1/src/components/About.jsx`
+- `pr1/src/components/Footer.jsx`
+- `pr1/src/components/Header.jsx`
+- `pr1/src/components/Skills.jsx`
+
+React concepts used:
+
+- Functional components.
+- Props received through the `props` object.
+- JSX rendering.
+- Array/list rendering in `Skills.jsx` through three explicit prop values.
+
+Components and behavior:
+
+- `Header` renders a title and name from `props.title` and `props.name`.
+- `About` renders a heading and biography from `props.bio`.
+- `Skills` renders three list items from `props.skill1`, `props.skill2`, and
+	`props.skill3`.
+- `Footer` renders a contact email from `props.email` and a fixed copyright
+	line.
+
+Routing and API usage:
+
+- No routing or API usage was added in the PR1 commit.
+- These original components are currently not imported by `App.jsx`; the
+	current app uses the later portfolio components and pages instead.
+
+Practical 6 dependency:
+
+- The reusable component and JSX foundation is part of the frontend history,
+	but Practical 6 currently depends more directly on the later route, state,
+	effect, loading, error, and API-helper code.
+
+PRACTICAL 2
+-----------
+
+Objective/functionality:
+
+- Build the portfolio UI and add user navigation, page components, local
+	interactive state, and an external GitHub repository fetch.
+- This mapping is supported by the PR2 commit, which added `NavBar`, `Contact`,
+	`Home`, and `Projects`.
+
+Important files:
+
+- `pr1/src/components/NavBar.jsx`
+- `pr1/src/pages/Home.jsx`
+- `pr1/src/pages/Projects.jsx` (the GitHub version existed in PR2 and was later
+	replaced by the current task-list version)
+- `pr1/src/pages/Contact.jsx`
+
+React concepts and UI behavior:
+
+- `Home` renders a portfolio hero, profile image, skills, project summaries,
+	contact links, and social links.
+- `Home` uses `react-icons` for GitHub, LinkedIn, email, and phone icons.
+- `Home` imports `pr1/src/imagep.jpeg` as the profile image.
+- `Contact` uses `useState` for a controlled name input and displays the live
+	value below the input.
+- `NavBar` uses `NavLink` for Home, Projects, and Contact, and normal anchor
+	links for the Home page `#about` and `#skills` sections.
+- The earlier PR2 version of `Projects` fetched public repositories from
+	`https://api.github.com/users/octocat/repos` and passed them to `RepoList`.
+
+Routing/API status:
+
+- The route wiring was committed in PR4, not PR2. See the Practical 4 section.
+- The original PR2 GitHub API flow is no longer the current `Projects` flow;
+	the current working tree fetches tasks from the local Express backend.
+
+PRACTICAL 3
+-----------
+
+Objective/functionality:
+
+- Add external API consumption support and explicit loading, error, and result
+	display components.
+- The PR3 commit added `ErrorMessage`, `RepoList`, and `Spinner`.
+
+Important files:
+
+- `pr1/src/components/ErrorMessage.jsx`
+- `pr1/src/components/RepoList.jsx`
+- `pr1/src/components/Spinner.jsx`
+- Historical API consumer: `pr1/src/pages/Projects.jsx`
+
+Behavior:
+
+- `Spinner` displays `Loading...` while a request is in progress.
+- `ErrorMessage` displays `Error! Failed to load data.` when a request fails.
+- `RepoList` maps repository data and displays each repository name and
+	`html_url` in an external link. It uses `repo.id` as the React key.
+- The historical `Projects` implementation used `useEffect` with an empty
+	dependency array, fetched the GitHub API once on mount, stored results in
+	state, and displayed loading/error/result states.
+
+Current reuse:
+
+- `Spinner` and `ErrorMessage` are still imported by the current
+	`pr1/src/pages/Projects.jsx`.
+- `RepoList` is no longer imported by the current Projects page.
+- The current Projects page retains the GET loading/error pattern but now
+	displays MongoDB tasks instead of GitHub repositories.
+
+PRACTICAL 4
+-----------
+
+Objective/functionality:
+
+- Add the React application entry point, BrowserRouter, route configuration,
+	navigation shell, and page layout.
+- The PR4 commit added `pr1/src/main.jsx` and `pr1/src/App.jsx`.
+
+Frontend entry point:
+
+- `pr1/src/main.jsx` imports React, ReactDOM, `BrowserRouter`, `App`, and
+	`index.css`.
+- It mounts the app with
+	`ReactDOM.createRoot(document.getElementById("root"))`.
+- The app is wrapped in `React.StrictMode` and `BrowserRouter`.
+- `pr1/index.html` provides the root `<div id="root"></div>` and loads
+	`/src/main.jsx`.
+
+Current routes in `pr1/src/App.jsx`:
+
+- `/` -> `Home`; portfolio landing page with hero, about, skills, and project
+	summary sections.
+- `/projects` -> `Projects`; current task list page that performs a GET to the
+	backend when mounted.
+- `/contact` -> `Contact`; controlled name input demonstration.
+
+App shell:
+
+- `App` renders `NavBar`, a main content area containing `Routes`, and a
+	footer with `© 2026 Nishtha Modi` and `Built with React + Vite`.
+- `NavBar` supplies navigation links for the three routes and the Home page
+	anchors.
+
+PRACTICAL 5
+-----------
+
+Objective/functionality:
+
+- Add the Node.js backend, Express task routes, MongoDB connection through
+	Mongoose, a Task model, request logging, and an error-handler module.
+- The PR5 commit added all backend files and backend package metadata.
+
+Backend setup:
+
+- Backend entry point: `backend/server.js`.
+- Backend package type is not declared in `backend/package.json`, so the code
+	uses CommonJS `require`/`module.exports`.
+- Backend dependencies are `cors`, `dotenv`, `express`, and `mongoose`.
+- `backend/package.json` has no `scripts` section. No backend start or dev
+	command is defined there.
+- The backend source uses port `3000` in `server.js`. The supplied Practical 6
+	handout mentions port `5000`, but the actual current code uses `3000`.
+
+Server behavior in `backend/server.js`:
+
+- Loads environment variables with `require("dotenv").config()`.
+- Imports `connectDB` from `./config/db` and calls `connectDB()` before
+	registering the routes/listening callback.
+- Creates an Express app and sets `const PORT = 3000`.
+- Registers `express.json()` for JSON request bodies.
+- Registers `middleware/logger.js`.
+- Mounts `routes/tasks.js` at `/tasks`.
+- Starts listening on port 3000 and logs `Server running on port 3000`.
+- Imports `cors`, but the current code does not call `app.use(cors())` or any
+	other CORS configuration. The comment says it should allow the React
+	frontend to communicate, but the middleware is not actually registered.
+- Imports no `errorHandler` in the current file and does not register
+	`app.use(errorHandler)`. Route errors are forwarded with `next(error)`, but
+	the intended custom handler is therefore not currently connected.
+
+Database configuration:
+
+- Connection file: `backend/config/db.js`.
+- Mongoose is imported and `mongoose.connect(process.env.MONGO_URI)` is called
+	inside an async `connectDB` function.
+- On success it logs `MongoDB connected successfully`.
+- On failure it logs the error message and calls `process.exit(1)`.
+- Environment variable name: `MONGO_URI`.
+- The repository `.env` contains a local MongoDB URI whose database name is
+	`task_management`. The value is intentionally not copied here.
+- The configured URI format is a local MongoDB address (`mongodb://127.0.0.1`)
+	with the database path `task_management`.
+- Whether MongoDB is actually running and whether the connection succeeds has
+	not been verified from the repository alone.
+
+Middleware:
+
+- `backend/middleware/logger.js` logs the HTTP method, request URL, and local
+	date/time, then calls `next()`.
+- `backend/middleware/errorHandler.js` logs `err.stack` and returns status 500
+	with `{ "message": "Internal Server Error" }`. It exists in the repository
+	but is not mounted by `server.js`.
+
+Task model in `backend/models/Task.js`:
+
+- Mongoose model name: `Task`.
+- Collection naming is left to Mongoose's normal model-to-collection behavior;
+	an explicit collection name is not configured in the schema.
+- `title`: String, required.
+- `description`: String, required.
+- `completed`: Boolean, optional, default `false`.
+- `createdAt`: Date, optional, default `Date.now`.
+- No timestamps option is enabled, so there is no automatic `updatedAt` field.
+- No custom validators, trimming, length rules, enum, or default for title or
+	description are defined.
+
+Task routes in `backend/routes/tasks.js`:
+
+- GET `/tasks`
+	- Calls `Task.find()`.
+	- Returns status 200 with the array of task documents as JSON.
+	- Forwards database errors to `next(error)`.
+
+- POST `/tasks`
+	- Passes `req.body` directly to `Task.create(req.body)`.
+	- Returns status 201 with the created task document as JSON.
+	- Mongoose required-field/schema errors are forwarded to `next(error)`.
+	- No route-level request-body validation is defined beyond the model.
+
+- PUT `/tasks/:id`
+	- Uses `Task.findByIdAndUpdate(req.params.id, req.body, { new: true,
+		runValidators: true })`.
+	- Returns status 200 with the updated task document.
+	- Returns status 404 with `{ message: "Task not found" }` if no document
+		matches the id.
+	- Runs Mongoose validators during the update.
+	- Other errors, including malformed ids, are forwarded to `next(error)`.
+
+- DELETE `/tasks/:id`
+	- Uses `Task.findByIdAndDelete(req.params.id)`.
+	- Returns status 200 with `{ message: "Task deleted successfully" }` when a
+		document is deleted.
+	- Returns status 404 with `{ message: "Task not found" }` if no document
+		matches the id.
+	- Other errors are forwarded to `next(error)`.
+
+CURRENT PRACTICAL 6 IMPLEMENTATION
+===================================
+
+Intended architecture:
+
+React frontend (`localhost:5173` by the Vite default)
+		-> fetch
+Node + Express backend (`localhost:5000` in the handout, but `3000` here)
+		-> Mongoose
+MongoDB
+
+The actual code currently uses port 3000 for both the backend server and the
+frontend API base URL. Vite has no explicit `server.port` setting in
+`pr1/vite.config.js`, so its normal development default is 5173. The backend
+port must therefore be treated as 3000 unless changed in source.
+
+Frontend entry and routing:
+
+- `pr1/src/main.jsx` mounts the React app inside `StrictMode` and
+	`BrowserRouter`.
+- `pr1/src/App.jsx` currently defines `/`, `/projects`, and `/contact`.
+- `/projects` is the current integration surface for tasks.
+
+Frontend API layer in `pr1/src/api.jsx`:
+
+- `BASE_URL` is exactly `http://localhost:3000`.
+- `getTasks()` sends GET `http://localhost:3000/tasks`, throws
+	`Failed to fetch tasks` for a non-2xx response, and returns parsed JSON.
+- `createTask(task)` sends POST `/tasks` with JSON content type and
+	`JSON.stringify(task)`, throws `Failed to create task` for a non-2xx response,
+	and returns parsed JSON.
+- `updateTask(id, task)` sends PUT `/tasks/:id` with JSON content type and the
+	serialized task body, throws `Failed to update task` for a non-2xx response,
+	and returns parsed JSON.
+- `deleteTask(id)` sends DELETE `/tasks/:id`, throws `Failed to delete task`
+	for a non-2xx response, and returns parsed JSON.
+- The names are consistent in this file: `getTasks`, `createTask`,
+	`updateTask`, and `deleteTask`. No `getTask` or `BASE_ULR` typo was found.
+- These helpers do not set a credentials option and do not parse server error
+	bodies before throwing their generic errors.
+
+Current task UI in `pr1/src/pages/Projects.jsx`:
+
+- State currently includes `tasks` (initially `[]`), `loading` (initially
+	`true`), and `error` (initially `false`).
+- An empty-dependency `useEffect` calls `getTasks()` once when the page mounts.
+- Success stores the returned array and sets loading false.
+- Failure sets error true and loading false.
+- While loading, it renders `Spinner`.
+- On failure, it renders `ErrorMessage`.
+- On success, it renders `Tasks`, an empty-state `No tasks found.`, or a list
+	using `_id`, `title`, `description`, and `completed`.
+- The UI does not currently render a create form, edit control, delete
+	control, completed toggle, or buttons calling `createTask`, `updateTask`, or
+	`deleteTask`.
+- The API helpers for POST, PUT, and DELETE are implemented in code but are not
+	imported or called by the current Projects page.
+
+CURRENT PRACTICAL 6 PROBLEMS AND NEXT ACTIONS
+---------------------------------------------
+
+1. Problem: CORS is not enabled in the backend.
+	 Evidence: `backend/server.js` imports `cors` but never calls
+	 `app.use(cors())` or configures an allowed origin.
+	 Expected behavior: A browser page served by Vite on port 5173 can call the
+	 backend on port 3000.
+	 Current behavior: Browser requests may be blocked by CORS even though the
+	 API helper uses the backend's actual port.
+	 Suggested next action: Register CORS middleware before the task routes and
+	 test a browser GET from the Vite app.
+
+2. Problem: The custom error handler is disconnected.
+	 Evidence: `backend/middleware/errorHandler.js` exists, but
+	 `backend/server.js` never imports or mounts it after the routes.
+	 Expected behavior: Route/database failures produce the documented JSON 500
+	 response.
+	 Current behavior: Express's default error handling is used instead, and
+	 error behavior may differ from the intended response.
+	 Suggested next action: Mount the handler after `app.use("/tasks", taskRoutes)`
+	 and exercise invalid or failing requests.
+
+3. Problem: The frontend only implements task retrieval in the UI.
+	 Evidence: `pr1/src/pages/Projects.jsx` imports only `getTasks`; it has no
+	 form or mutation handlers. `createTask`, `updateTask`, and `deleteTask` are
+	 unused in `pr1/src/api.jsx`.
+	 Expected behavior: A user can create, view, update, and delete tasks from
+	 React.
+	 Current behavior: Existing tasks can be displayed if the GET succeeds, but
+	 all CRUD mutations require an external client or direct API request.
+	 Suggested next action: Add task form/list controls and connect the three
+	 existing mutation helpers, then refresh or update local state after each
+	 successful mutation.
+
+4. Problem: The practical handout and code specify different backend ports.
+	 Evidence: The handout says 5000, while `backend/server.js` and
+	 `pr1/src/api.jsx` both use 3000. `pr1/vite.config.js` has no port override.
+	 Expected behavior: Frontend and backend use one documented, reachable port.
+	 Current behavior: The current code is internally aligned on 3000, but any
+	 instruction or test expecting 5000 will fail.
+	 Suggested next action: Decide whether 3000 or 5000 is the required contract;
+	 then update the API base URL and server port together if needed. Do not
+	 assume 5000 based only on the handout.
+
+5. Problem: Backend runtime and MongoDB connectivity are unverified.
+	 Evidence: `connectDB()` depends on `MONGO_URI` and exits the process on
+	 connection failure; no runtime request test or MongoDB status is recorded
+	 in the repository.
+	 Expected behavior: The backend starts, connects to the local
+	 `task_management` database, and serves `/tasks`.
+	 Current behavior: Source code is present, but actual startup, connection,
+	 and persistence have not been verified here.
+	 Suggested next action: Start MongoDB, start the backend from `backend/`,
+	 check its connection/startup logs, and exercise all four endpoints.
+
+6. Problem: Validation and error responses are minimal.
+	 Evidence: POST passes the entire request body to `Task.create`, and the
+	 generic error handler returns only a 500 message. There is no explicit
+	 malformed-id or validation response mapping.
+	 Expected behavior: Invalid task input and ids produce useful predictable
+	 API errors.
+	 Current behavior: Required-field validation is delegated to Mongoose, while
+	 malformed ids and other errors are forwarded without a mounted custom
+	 handler.
+	 Suggested next action: Verify the actual error responses during API tests;
+	 add validation/error handling only as required by the practical.
+
+7. Problem: Mutation refresh behavior is absent from the UI.
+	 Evidence: The current Projects page performs its GET only on initial mount
+	 and has no mutation handlers.
+	 Expected behavior: The visible list reflects successful create, update, and
+	 delete operations without requiring a manual page reload.
+	 Current behavior: No UI mutation can currently occur, so no re-fetch or
+	 local-state update occurs.
+	 Suggested next action: Re-fetch tasks or update state after each successful
+	 mutation and surface mutation loading/error states.
+
+VERIFICATION STATUS
+-------------------
+
+- Frontend build: VERIFIED. `Push-Location pr1; npm run build` completed
+	successfully and produced Vite output.
+- Frontend lint: VERIFIED. `Push-Location pr1; npm run lint` completed with no
+	output/errors.
+- Backend syntax: VERIFIED. `node --check` completed for `server.js`,
+	`routes/tasks.js`, `config/db.js`, and `models/Task.js` from `backend/`.
+- Backend startup: NOT VERIFIED. It requires a reachable MongoDB instance and
+	`MONGO_URI`.
+- MongoDB persistence: NOT VERIFIED.
+- Browser CORS behavior: NOT VERIFIED, and source inspection currently shows
+	CORS is not registered.
+- Full CRUD browser flow: NOT VERIFIED and not currently implemented in the UI.
+
+PRACTICAL 6 COMPLETION CHECKLIST
+================================
+
+Backend
+
+- [ ] Express server working
+- [ ] MongoDB connection working
+- [x] Task model defined in code
+- [x] GET `/tasks` route defined
+- [x] POST `/tasks` route defined
+- [x] PUT `/tasks/:id` route defined
+- [x] DELETE `/tasks/:id` route defined
+- [ ] CORS working (package/import exists, middleware is not registered)
+- [ ] Custom error handling working (handler exists, is not mounted)
+
+Frontend
+
+- [x] Backend API URL is present and currently matches the backend source port
+			(`http://localhost:3000`)
+- [x] GET tasks connected to the Projects page
+- [ ] Create task connected to the UI
+- [ ] Update task connected to the UI
+- [ ] Delete task connected to the UI
+- [x] GET loading state displayed through `Spinner`
+- [x] GET error state displayed through `ErrorMessage`
+- [x] Task list rendered
+- [ ] UI refreshes/re-fetches after mutations
+
+Persistence
+
+- [ ] Create task and verify it is stored
+- [ ] Refresh browser and verify the created task remains
+- [ ] Update task and verify the update is stored
+- [ ] Refresh browser and verify the updated task remains
+- [ ] Delete task and confirm it is removed from MongoDB/list
+
+IMPORTANT FILES
+===============
+
+- `context.txt` - complete project and Practical 6 technical context.
+- `package.json` - top-level package metadata; only `react-icons` is declared
+	and no scripts are defined.
+- `backend/package.json` - backend dependencies; no backend scripts.
+- `backend/server.js` - Express app construction, JSON middleware, logger,
+	task route mounting, port 3000, and startup.
+- `backend/config/db.js` - Mongoose connection using `process.env.MONGO_URI`.
+- `backend/.env` - local `MONGO_URI` configuration. Secret/value is not
+	reproduced here.
+- `backend/models/Task.js` - Mongoose Task schema and model.
+- `backend/routes/tasks.js` - GET, POST, PUT, and DELETE task routes.
+- `backend/middleware/logger.js` - request logging middleware.
+- `backend/middleware/errorHandler.js` - unused custom 500 error middleware.
+- `pr1/package.json` - frontend scripts and React, React DOM, and router
+	dependencies.
+- `pr1/vite.config.js` - Vite React plugin configuration; no explicit port.
+- `pr1/index.html` - browser entry document and React root element.
+- `pr1/src/main.jsx` - React mount, StrictMode, and BrowserRouter.
+- `pr1/src/App.jsx` - current route configuration and app shell.
+- `pr1/src/api.jsx` - frontend task fetch helpers and backend base URL.
+- `pr1/src/pages/Home.jsx` - current portfolio home page.
+- `pr1/src/pages/Projects.jsx` - current GET-only task list page.
+- `pr1/src/pages/Contact.jsx` - controlled contact/name input page.
+- `pr1/src/components/NavBar.jsx` - route and anchor navigation.
+- `pr1/src/components/Spinner.jsx` - loading display.
+- `pr1/src/components/ErrorMessage.jsx` - API error display.
+- `pr1/src/components/RepoList.jsx` - historical GitHub repository display;
+	currently unused by Projects.
+- `pr1/src/components/Header.jsx`, `About.jsx`, `Skills.jsx`, and `Footer.jsx`
+	- PR1 reusable prop-based components, currently not imported by App.
+- `pr1/src/styles.css` - current portfolio styling.
+- `pr1/src/index.css` - contains only a comment; styling is in `styles.css`.
+- `pr1/README.md` - Vite starter documentation, not practical-specific docs.
+
+DEPENDENCIES AND COMMANDS
+=========================
+
+Frontend (`pr1/package.json`):
+
+- Runtime: `react`, `react-dom`, `react-router-dom`.
+- UI icons: top-level `react-icons` is available and used by `Home.jsx`.
+- Development: `vite`, `@vitejs/plugin-react`, ESLint packages and React ESLint
+	plugins.
+- Development command: from `pr1/`, `npm run dev`.
+- Build command: from `pr1/`, `npm run build`.
+- Lint command: from `pr1/`, `npm run lint`.
+- Preview command: from `pr1/`, `npm run preview`.
+- Default Vite dev port is expected to be 5173 because no explicit port is set.
+
+Backend (`backend/package.json`):
+
+- `express` - HTTP server and routing.
+- `mongoose` - MongoDB object modeling and persistence.
+- `dotenv` - loads `MONGO_URI` from environment configuration.
+- `cors` - installed/imported but not currently registered as middleware.
+- No `start`, `dev`, or other npm script is defined. The entry file is
+	`backend/server.js`; a direct Node command is needed unless a script is
+	added later.
+
+CURRENT STATE - PRACTICAL 6
+===========================
+
+1. What is already working in code:
+	 The React app builds and lints. The backend task model and four CRUD route
+	 handlers exist. The frontend API module has GET, POST, PUT, and DELETE
+	 helper functions. The Projects page can fetch and render a task list with a
+	 loading state and a GET error state.
+
+2. Backend functionality complete in code:
+	 Express JSON parsing, request logging, MongoDB connection initialization,
+	 the Task schema, and GET/POST/PUT/DELETE `/tasks` route definitions are
+	 present. The backend listens on port 3000. Actual server/database runtime
+	 behavior is not verified.
+
+3. Frontend functionality complete in code:
+	 React/Vite startup, BrowserRouter routes, portfolio pages, task API helper
+	 functions, and GET-only task display are present. Create, update, and
+	 delete helpers exist but are not connected to UI controls.
+
+4. Currently broken or incomplete:
+	 CORS is imported but not enabled; the custom error handler is not mounted;
+	 the Projects UI has no create/update/delete workflow; mutation loading and
+	 error states are missing; and MongoDB/backend/browser integration has not
+	 been runtime-tested. The handout's port 5000 differs from the actual source
+	 port 3000.
+
+5. Still missing:
+	 A complete task management UI, connected mutation flows, post-mutation
+	 refresh/state synchronization, CORS registration, connected error handling,
+	 and persistence verification across browser refreshes.
+
+6. Fix first:
+	 Confirm the required backend port, ensure MongoDB is running, register CORS,
+	 connect the error handler, and prove the backend GET works. Then implement
+	 and connect the React create/update/delete controls using the existing API
+	 helpers.
+
+7. Test after fixing:
+	 Start MongoDB, start the backend, start Vite, load `/projects`, verify the
+	 initial GET, create a task, update it, delete it, observe loading/errors,
+	 refresh the browser after create and update, and confirm MongoDB-backed data
+	 remains or is removed as expected. Also test a failed request and a missing
+	 task id.
+
+8. Practical 6 completion criterion:
+	 The React app at its configured Vite URL can create, list, update, and delete
+	 tasks through the Express API on its configured backend port; the API
+	 persists through Mongoose to the `task_management` MongoDB database; CORS
+	 and error handling work; loading and API error states are visible; and
+	 create/update/delete behavior remains correct after browser refreshes.
+
+UNCERTAINTIES
+=============
+
+- The repository does not contain a Practical 1-6 handout or explicit
+	practical documentation, so the practical descriptions are inferred from
+	commit names and changed files.
+- MongoDB availability, backend startup, browser CORS behavior, and actual
+	persistence could not be confirmed by static source inspection alone.
+- The intended port from the handout is reported as 5000, but the current
+	source and API helper clearly use 3000. The required final port is therefore
+	a project decision that must be confirmed before changing code.
