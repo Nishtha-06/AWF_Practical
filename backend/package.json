@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test": "node --test"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
@@ -6,6 +9,7 @@
     "express": "^5.2.1",
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.9.2"
+    "mongoose": "^9.9.2",
+    "node-cache": "^5.1.2"
   }
 }
